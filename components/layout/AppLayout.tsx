@@ -17,6 +17,7 @@ import {
   Menu,
   X,
   Key,
+  CreditCard,
 } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import LanguageToggle from '@/components/ui/LanguageToggle';
@@ -32,6 +33,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: '/transactions', label: t('common.transactions'), icon: History },
     { href: '/payin', label: t('common.paymentsIn'), icon: ArrowDownLeft },
     { href: '/payout', label: t('common.paymentsOut'), icon: ArrowUpRight },
+    { href: '/recharges', label: t('recharges.title'), icon: CreditCard },
     { href: '/api-keys', label: t('common.apiKeys') || 'API Keys', icon: Key },
     { href: '/settings', label: t('common.settings'), icon: Settings },
   ];

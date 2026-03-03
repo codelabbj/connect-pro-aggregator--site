@@ -145,7 +145,7 @@ export default function TransactionsPage() {
           </p>
         </div>
         <button
-          className={`filter-toggle ${showFilters ? 'active' : ''}`}
+          className={`filter-toggle mobile-only ${showFilters ? 'active' : ''}`}
           onClick={() => setShowFilters(!showFilters)}
         >
           <Filter size={18} />
@@ -230,7 +230,7 @@ export default function TransactionsPage() {
 
       {/* ── Transaction List ── */}
       <div className="table-card">
-        <div className="table-responsive">
+        <div className="table-responsive desktop-only">
           <table className="data-table">
             <thead>
               <tr>
@@ -300,6 +300,42 @@ export default function TransactionsPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="mobile-only card-list">
+          {loading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="skeleton-card" />
+            ))
+          ) : transactions.length > 0 ? (
+            transactions.map((tx) => (
+              <div key={tx.uid} className="mobile-tx-card" onClick={() => viewDetails(tx)}>
+                <div className="card-row">
+                  <span className="mono-ref">{tx.reference}</span>
+                  <span className={`badge-status ${tx.status}`}>{tx.status}</span>
+                </div>
+                <div className="card-row main">
+                  <div className="type-amount">
+                    <span className={`tag-type ${tx.transaction_type}`}>
+                      {tx.transaction_type === 'payin' ? <ArrowDownLeft size={10} /> : <ArrowUpRight size={10} />}
+                    </span>
+                    <span className="amount">{fmt(tx.amount)}</span>
+                  </div>
+                  <ChevronRight size={18} className="text-muted" />
+                </div>
+                <div className="card-row footer">
+                  <span className="date">{new Date(tx.created_at).toLocaleString()}</span>
+                  <span className="network">{tx.network_name || tx.network_code}</span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="empty-state mobile">
+              <Search size={40} />
+              <p>No transactions found.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -499,9 +535,18 @@ export default function TransactionsPage() {
           margin-bottom: 0;
         }
         .filter-bar-wrapper.expanded {
-          max-height: 500px;
+          max-height: 800px;
           opacity: 1;
           margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 769px) {
+          .filter-bar-wrapper {
+            max-height: none;
+            overflow: visible;
+            opacity: 1;
+            margin-bottom: var(--space-xl);
+          }
         }
 
         .filter-grid {
@@ -510,7 +555,7 @@ export default function TransactionsPage() {
           border-radius: var(--radius-lg);
           padding: var(--space-xl);
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
           gap: var(--space-lg);
           box-shadow: var(--shadow-sm);
         }
@@ -556,7 +601,6 @@ export default function TransactionsPage() {
         }
         .btn-search:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3); }
 
-        /* Table Styles */
         .table-card { 
           background: var(--bg-surface);
           border-radius: var(--radius-lg);
@@ -565,6 +609,8 @@ export default function TransactionsPage() {
           box-shadow: var(--shadow-sm);
         }
         .table-responsive { overflow-x: auto; }
+        .desktop-only { display: block; }
+        .mobile-only { display: none; }
         
         .data-table { width: 100%; border-collapse: collapse; text-align: left; }
         .data-table th { 
@@ -575,11 +621,25 @@ export default function TransactionsPage() {
           color: var(--text-tertiary);
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          border-bottom: 1px solid var(--border-subtle);
+          border-bottom: 2px solid var(--border-subtle);
         }
-        .data-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 0.875rem; vertical-align: middle; }
+        .data-table td { padding: 16px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 0.875rem; vertical-align: middle; }
         .clickable-row { cursor: pointer; transition: background 0.2s; }
         .clickable-row:hover { background: var(--bg-app); }
+
+        /* Mobile Card Style */
+        .card-list { display: flex; flex-direction: column; }
+        .mobile-tx-card { padding: 16px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; }
+        .mobile-tx-card:active { background: var(--bg-app); }
+        .card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .card-row.main { margin-bottom: 4px; }
+        .card-row .type-amount { display: flex; align-items: center; gap: 8px; }
+        .card-row .amount { font-size: 1.125rem; font-weight: 800; color: var(--text-primary); }
+        .card-row .date { font-size: 0.75rem; color: var(--text-tertiary); }
+        .card-row .network { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+        .skeleton-card { height: 100px; width: 100%; border-bottom: 1px solid var(--border-subtle); position: relative; overflow: hidden; }
+        .skeleton-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--bg-app), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
         .ref-cell { display: flex; align-items: center; gap: 8px; }
         .mono-ref { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.75rem; color: var(--text-primary); }
@@ -668,13 +728,23 @@ export default function TransactionsPage() {
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; }
         .btn-primary-close { padding: 10px 24px; border-radius: 10px; background: var(--accent-primary); color: white; border: none; font-weight: 700; cursor: pointer; }
 
+        @media (max-width: 768px) {
+          .desktop-only { display: none; }
+          .mobile-only { display: block; }
+          .pagination-bar { flex-direction: column; gap: 12px; }
+          .page-btns { width: 100%; justify-content: space-between; }
+        }
+
         @media (max-width: 640px) {
-          .header-flex { flex-direction: column; gap: 16px; }
-          .filter-grid { grid-template-columns: 1fr; }
+          .header-flex { flex-direction: column; gap: 16px; align-items: stretch; }
+          .filter-grid { grid-template-columns: 1fr; gap: 16px; }
+          .filter-actions { flex-direction: column-reverse; }
+          .btn-search, .btn-reset { width: 100%; }
           .detail-grid { grid-template-columns: 1fr; gap: 16px; }
-          .show-desktop-tx { display: none; }
-          .page-info { display: none; }
-          .pagination-bar { justify-content: center; }
+          .modal-content { border-radius: 0; height: 100vh; max-height: 100vh; }
+          .modal-header { padding: 16px 20px; }
+          .modal-body { padding: 20px; }
+          .detail-value.price { font-size: 1.125rem; }
         }
 
         /* Skeleton */

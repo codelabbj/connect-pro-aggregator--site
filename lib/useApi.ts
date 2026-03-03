@@ -13,8 +13,10 @@ export function useApi() {
         const request = async (endpoint: string, options: RequestInit = {}) => {
             let accessToken = authService.getAccessToken();
 
+            const isFormData = options.body instanceof FormData;
+
             const headers: any = {
-                'Content-Type': 'application/json',
+                ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
                 ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
                 ...options.headers,
             };
@@ -94,11 +96,11 @@ export function useApi() {
             get: (endpoint: string) => request(endpoint, { method: 'GET' }),
             post: (endpoint: string, data?: any) => request(endpoint, {
                 method: 'POST',
-                body: data ? JSON.stringify(data) : undefined,
+                body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
             }),
             patch: (endpoint: string, data?: any) => request(endpoint, {
                 method: 'PATCH',
-                body: data ? JSON.stringify(data) : undefined,
+                body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
             }),
             delete: (endpoint: string) => request(endpoint, { method: 'DELETE' }),
         };
