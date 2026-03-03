@@ -130,5 +130,20 @@ export const authService = {
             throw new Error(errorData.detail || errorData.message || 'Failed to confirm password reset');
         }
         return response.json();
+    },
+
+    async resetPasswordConfirm(uid: string, token: string, password: string) {
+        const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
+        const response = await fetch(`${BASE_URL}/api/auth/password-reset/confirm/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid, token, password }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || errorData.message || 'Failed to confirm password reset');
+        }
+        return response.json();
     }
 };
