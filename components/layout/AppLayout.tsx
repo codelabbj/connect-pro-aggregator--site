@@ -52,7 +52,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* ── SIDEBAR ── */}
       <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-logo">
-          <span className="logo-text">{t('login.title')}</span>
+          <span className="logo-text">{process.env.NEXT_PUBLIC_APP_NAME || t('login.title')}</span>
           <button
             className="close-btn show-mobile"
             onClick={() => setMobileMenuOpen(false)}
@@ -117,7 +117,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <h1 className="page-title show-desktop">
               {navItems.find(n => n.href === pathname)?.label || t('dashboard.overview')}
             </h1>
-            <span className="logo-mobile show-mobile">{t('login.title')}</span>
+            <span className="logo-mobile show-mobile">{process.env.NEXT_PUBLIC_APP_NAME || t('login.title')}</span>
           </div>
 
           <div className="nav-actions">

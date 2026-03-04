@@ -9,7 +9,9 @@ import AppLayout from '@/components/layout/AppLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Aggregator Dashboard | Professional Payment Solutions',
+  title: process.env.NEXT_PUBLIC_APP_NAME
+    ? `${process.env.NEXT_PUBLIC_APP_NAME} | Dashboard`
+    : 'Aggregator Dashboard | Professional Payment Solutions',
   description: 'Manage your transactions, payins, and payouts with ease.',
 };
 

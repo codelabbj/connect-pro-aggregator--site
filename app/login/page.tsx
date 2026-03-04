@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-header">
-        <span className="login-brand">{t('login.title')}</span>
+        <span className="login-brand">{process.env.NEXT_PUBLIC_APP_NAME || t('login.title')}</span>
         <div className="login-header-actions">
           <ThemeToggle />
           <LanguageToggle />
