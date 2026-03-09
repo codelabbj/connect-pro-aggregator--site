@@ -18,6 +18,8 @@ import {
   X,
   Key,
   CreditCard,
+  Link as LinkIcon,
+  Plus,
 } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import LanguageToggle from '@/components/ui/LanguageToggle';
@@ -34,6 +36,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: '/payin', label: t('common.paymentsIn'), icon: ArrowDownLeft },
     { href: '/payout', label: t('common.paymentsOut'), icon: ArrowUpRight },
     { href: '/recharges', label: t('recharges.title'), icon: CreditCard },
+    { href: '/mon-lien-de-paiement', label: t('paymentLinks.myLink'), icon: LinkIcon },
+    { href: '/creer-un-lien-de-paiement', label: t('paymentLinks.createLink'), icon: Plus },
     { href: '/api-keys', label: t('common.apiKeys') || 'API Keys', icon: Key },
     { href: '/settings', label: t('common.settings'), icon: Settings },
   ];
